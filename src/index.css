@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-charbon text-creme antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  ::selection {
+    background: #d4a843;
+    color: #0f0f13;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0f0f13;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d4a84355;
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #d4a843;
+  }
+}
+
+@layer utilities {
+  .font-display-italic {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    font-weight: 600;
+  }
+  .text-tracking-tight2 {
+    letter-spacing: -0.03em;
+  }
+}
+
+/* Texture de bruit globale — élimine les dégradés digitaux plats */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Boutons magnétiques */
+.magnetic-btn {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.magnetic-btn:hover {
+  transform: scale(1.03);
+}
+.magnetic-btn:active {
+  transform: scale(0.97);
+}
+
+.lift {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.lift:hover {
+  transform: translateY(-1px);
+}
+
+.experience-card {
+  transition:
+    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.experience-card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .magnetic-btn,
+  .lift,
+  .experience-card {
+    transition: none;
+  }
+  .magnetic-btn:hover,
+  .lift:hover,
+  .experience-card:hover {
+    transform: none;
+  }
+}
