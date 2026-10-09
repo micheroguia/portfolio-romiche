@@ -1,269 +1,538 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Mail, Phone, MapPin, Download, FileDown, ArrowDown } from 'lucide-react';
+import {
+  ArrowRight,
+  ArrowUp,
+  ArrowUpRight,
+  Briefcase,
+  Check,
+  ChevronDown,
+  Clock,
+  Globe,
+  Layers,
+  Mail,
+  MapPin,
+  Menu,
+  MessageCircle,
+  Paintbrush,
+  Phone,
+  Rocket,
+  Sparkles,
+  X
+} from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const NAV_LINKS = [
-  { label: 'À propos', href: '#a-propos' },
-  { label: 'Expérience', href: '#experience' },
-  { label: 'Compétences', href: '#competences' },
-  { label: 'Contact', href: '#contact' }
+/* ============================================================
+   CONTENU ÉDITABLE — modifie ici tes textes, chiffres et liens
+   ============================================================ */
+const CONTENU = {
+  nom: 'Romiche',
+  nomComplet: 'Romiche GUIAGAIN DJOUGUELA',
+  titre: 'Développeur Fullstack',
+  baseline: 'Je crée des sites & applications d’exception.',
+  accroche:
+    'Je conçois des sites vitrines et des applications web rapides, modernes et pensées pour convertir — de la maquette à la mise en ligne, avec suivi.',
+  email: 'guiagainromiche8@gmail.com',
+  telephone: '+237 692 393 690',
+  telephoneLien: 'tel:+237692393690',
+  whatsapp: 'https://wa.me/237692393690',
+  localisation: 'Douala, Cameroun',
+  disponible: true
+};
+
+const STATS = [
+  { valeur: 5, suffixe: '+', label: 'Projets réalisés' },
+  { valeur: 3, suffixe: '+', label: 'Ans de pratique' },
+  { valeur: 6, suffixe: '', label: 'Technologies maîtrisées' }
 ];
 
-const EXPERIENCES = [
+const NAV_LINKS = [
+  { label: 'Services', href: '#services' },
+  { label: 'Réalisations', href: '#realisations' },
+  { label: 'Parcours', href: '#parcours' },
+  { label: 'Tarifs', href: '#tarifs' },
+  { label: 'FAQ', href: '#faq' }
+];
+
+const SERVICES = [
   {
-    periode: 'EN COURS — 50%',
-    titre: 'ERP de gestion des PME',
-    entreprise: 'Projet personnel',
+    icone: Globe,
+    titre: 'Sites vitrines',
     description:
-      'Modules déjà réalisés : gestion des produits, du stock et des clients. Front-end développé avec Flutter en version web, back-end en Java. Mené en autonomie, ce projet illustre ma capacité à construire une application web complète et évolutive.'
+      'Des sites qui présentent ton activité et transforment les visiteurs en clients : rapides, responsives, optimisés pour Google.',
+    points: [
+      'Design sur mesure',
+      'Responsive mobile & desktop',
+      'Formulaires de contact',
+      'SEO de base',
+      'Mise en ligne incluse'
+    ]
   },
   {
-    periode: 'EXPÉRIENCE PRATIQUE',
-    titre: 'Site e-commerce',
-    entreprise: 'Réalisation personnelle',
+    icone: Layers,
+    titre: 'Applications web & SaaS',
     description:
-      'Conception et développement d\'un site marchand complet sur des bases solides en HTML, CSS et PHP : structuration, mise en page responsive et mise en ligne du catalogue.'
+      'Des applications complètes avec comptes, base de données et espace d’administration : candidatures en ligne, gestion, tableaux de bord.',
+    points: [
+      'React + Node.js',
+      'Base de données sécurisée',
+      'Espace administrateur',
+      'Uploads de fichiers',
+      'Comptes & rôles'
+    ]
   },
   {
-    periode: 'PARTICIPATION',
-    titre: 'Application de gestion des marchés',
-    entreprise: 'Projet collectif',
+    icone: Paintbrush,
+    titre: 'Refonte de sites',
     description:
-      'Participation au développement d\'une application de gestion des marchés, renforçant mes compétences en travail d\'équipe, en organisation et en conception applicative.'
+      'Ton site actuel est dépassé ? Je le transforme en expérience moderne qui inspire confiance et retient les visiteurs.',
+    points: [
+      'Audit de l’existant',
+      'Nouveau design moderne',
+      'Contenus réorganisés',
+      'Vitesse optimisée',
+      'Zéro perte de données'
+    ]
+  },
+  {
+    icone: Rocket,
+    titre: 'Déploiement & suivi',
+    description:
+      'Mise en ligne, nom de domaine, HTTPS, sauvegardes et maintenance : ton site reste rapide et en ligne, sans t’en occuper.',
+    points: [
+      'Hébergement configuré',
+      'HTTPS & domaine',
+      'Sauvegardes automatiques',
+      'Mises à jour',
+      'Support par WhatsApp'
+    ]
   }
 ];
 
-const SKILLS = [
-  { nom: 'HTML / CSS', niveau: 90 },
-  { nom: 'PHP', niveau: 80 },
-  { nom: 'Flutter', niveau: 75 },
-  { nom: 'Java', niveau: 70 },
-  { nom: 'Organisation & Autonomie', niveau: 85 }
+const REALISATIONS = [
+  {
+    titre: 'CamerImmo — SaaS de gestion locative',
+    description:
+      'Plateforme complète : immeubles, baux, loyers, quittances PDF, pénalités automatiques et exports comptables.',
+    client: 'Projet produit',
+    tags: ['NestJS', 'React', 'PostgreSQL'],
+    lien: '#contact',
+    lienLabel: 'Demander une démo'
+  },
+  {
+    titre: 'IBA Nkongsamba — site + candidatures',
+    description:
+      'Site institutionnel de l’Institut des Beaux-Arts : galerie, actualités, candidatures en ligne avec pièces jointes et espace admin.',
+    client: 'Institut des Beaux-Arts',
+    tags: ['Node.js', 'SQLite', 'En ligne'],
+    lien: 'https://iba-nkongsamba.onrender.com',
+    lienLabel: 'Voir le site',
+    externe: true
+  },
+  {
+    titre: 'ERP de gestion des PME',
+    description:
+      'Produits, stock et clients dans une application web évolutive menée en autonomie, de bout en bout.',
+    client: 'Projet personnel',
+    tags: ['Flutter', 'Java'],
+    lien: '#contact',
+    lienLabel: 'Demander une démo'
+  },
+  {
+    titre: 'Site e-commerce',
+    description:
+      'Boutique en ligne complète : catalogue, fiches produits et parcours d’achat sur des bases saines et responsives.',
+    client: 'Projet personnel',
+    tags: ['HTML/CSS', 'PHP'],
+    lien: '#contact',
+    lienLabel: 'Demander une démo'
+  }
 ];
 
-const CONTACTS = [
-  { icone: Mail, label: 'Email', valeur: 'guiagainromiche8@gmail.com', href: 'mailto:guiagainromiche8@gmail.com' },
-  { icone: Phone, label: 'Téléphone', valeur: '+237 692 393 690', href: 'tel:+237692393690' },
-  { icone: MapPin, label: 'Localisation', valeur: 'Douala, Cameroun', href: '#contact' }
+const PARCOURS = [
+  {
+    periode: '2025 — Présent',
+    titre: 'Développeur Fullstack indépendant',
+    entreprise: 'Freelance — Douala',
+    description:
+      'Sites vitrines et applications web pour des clients institutionnels (Institut des Beaux-Arts) et produits SaaS : du besoin exprimé à la mise en ligne, avec formation et suivi.'
+  },
+  {
+    periode: '2025 — 2026',
+    titre: 'CamerImmo — SaaS de gestion locative',
+    entreprise: 'Projet produit',
+    description:
+      'API NestJS + PostgreSQL, application React, quittances PDF, automatisations et 150+ tests : une application métier complète et déployée.'
+  },
+  {
+    periode: 'En cours',
+    titre: 'ERP de gestion des PME',
+    entreprise: 'Projet personnel',
+    description:
+      'Modules produits, stock et clients. Front-end Flutter web, back-end Java. Projet mené en autonomie, preuve de ma capacité à construire une application complète et évolutive.'
+  },
+  {
+    periode: 'Expérience pratique',
+    titre: 'Site e-commerce & app de gestion des marchés',
+    entreprise: 'Réalisations personnelles & collectives',
+    description:
+      'Boutique en ligne (HTML, CSS, PHP) et participation à une application collective de gestion des marchés : travail d’équipe, organisation et conception applicative.'
+  }
 ];
 
-function Navbar({ scrolled }) {
+const PROCESSUS = [
+  {
+    etape: '01',
+    titre: 'Écoute & cadrage',
+    description:
+      'On clarifie ton besoin, tes objectifs et ton budget. Tu reçois un devis clair, sans jargon ni surprise.'
+  },
+  {
+    etape: '02',
+    titre: 'Design',
+    description:
+      'Maquette moderne à ton image, validée avec toi avant le développement. Chaque écran a un but : convertir.'
+  },
+  {
+    etape: '03',
+    titre: 'Réalisation & mise en ligne',
+    description:
+      'Développement rapide et soigné, tests, mise en ligne, formation à la prise en main — puis suivi.'
+  }
+];
+
+const TARIFS = [
+  {
+    nom: 'Vitrine',
+    prix: '75 000',
+    unite: 'FCFA',
+    base: 'à partir de',
+    description: 'Pour présenter ton activité et être trouvé en ligne.',
+    points: [
+      'Site 5 pages sur mesure',
+      'Responsive mobile & desktop',
+      'Formulaire de contact',
+      'SEO de base',
+      'Mise en ligne incluse'
+    ],
+    vedette: false
+  },
+  {
+    nom: 'Sur mesure',
+    prix: '250 000',
+    unite: 'FCFA',
+    base: 'à partir de',
+    description: 'Application web, espace admin, base de données.',
+    points: [
+      'Fonctionnalités sur mesure',
+      'Base de données sécurisée',
+      'Espace administrateur',
+      'Formation prise en main',
+      'Maintenance 3 mois offerte'
+    ],
+    vedette: true
+  }
+];
+
+const FAQ = [
+  {
+    question: 'En combien de temps mon site sera-t-il prêt ?',
+    reponse:
+      'Comptez 2 à 3 semaines pour un site vitrine, 1 à 3 mois pour une application sur mesure selon la complexité. Un calendrier précis est fixé dans le devis.'
+  },
+  {
+    question: 'Comment se passe le paiement ?',
+    reponse:
+      '50 % d’acompte pour démarrer, le solde à la livraison. Paiement par Mobile Money ou virement. Chaque étape est validée avec toi avant de continuer.'
+  },
+  {
+    question: 'Je n’ai ni textes ni photos, on fait comment ?',
+    reponse:
+      'On s’en occupe ensemble : je te guide sur les contenus à fournir et je mets en forme textes et images pour un rendu professionnel.'
+  },
+  {
+    question: 'Proposes-tu la maintenance après la mise en ligne ?',
+    reponse:
+      'Oui : mises à jour, sauvegardes, petites évolutions et support par WhatsApp. 3 mois offerts pour les projets sur mesure, puis forfait simple.'
+  },
+  {
+    question: 'Mon site sera-t-il visible sur Google ?',
+    reponse:
+      'Oui : structure SEO de base incluse (titres, descriptions, vitesse, mobile). Pour aller plus loin, je propose un accompagnement référencement.'
+  },
+  {
+    question: 'Et si je veux modifier mon site moi-même ?',
+    reponse:
+      'Je te forme à la prise en main (mise à jour des textes, photos, actualités) en une session simple. Les espaces admin sont pensés pour les non-techniques.'
+  }
+];
+
+// TODO : remplacer par de vrais témoignages clients
+const TEMOIGNAGES = [
+  {
+    texte:
+      'Travail sérieux et à l’écoute : le site a été livré dans les délais, avec une galerie et des candidatures en ligne qui nous font gagner un temps précieux.',
+    auteur: 'Client institutionnel',
+    role: 'Institut de formation'
+  },
+  {
+    texte:
+      'De la maquette à la mise en ligne, tout était clair. Le suivi après livraison est vraiment appréciable, on n’est jamais lâché.',
+    auteur: 'Porteur de projet',
+    role: 'PME locale'
+  }
+];
+
+/* ============================ COMPOSANTS ============================ */
+
+function Reveal({ children, delay = 0, className = '' }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        el,
+        { y: 36, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.9,
+          delay,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 88%' }
+        }
+      );
+    });
+    return () => ctx.revert();
+  }, [delay]);
   return (
-    <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-xl">
+    <div ref={ref} className={className}>
+      {children}
+    </div>
+  );
+}
+
+function Compteur({ valeur, suffixe }) {
+  const ref = useRef(null);
+  const [affiche, setAffiche] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obj = { n: 0 };
+    const ctx = gsap.context(() => {
+      gsap.to(obj, {
+        n: valeur,
+        duration: 1.6,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 90%',
+          onUpdate: () => setAffiche(Math.round(obj.n))
+        }
+      });
+    });
+    return () => ctx.revert();
+  }, [valeur]);
+  return (
+    <span ref={ref}>
+      {affiche}
+      {suffixe}
+    </span>
+  );
+}
+
+function SectionTitre({ eyebrow, titre, description }) {
+  return (
+    <Reveal className="mx-auto mb-12 max-w-2xl text-center sm:mb-16">
+      <p className="mb-3 font-mono text-xs uppercase tracking-[0.25em] text-or">{eyebrow}</p>
+      <h2 className="font-display-italic text-4xl leading-tight text-creme sm:text-5xl">{titre}</h2>
+      {description && <p className="mt-4 text-base leading-relaxed text-creme/70">{description}</p>}
+    </Reveal>
+  );
+}
+
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [ouvert, setOuvert] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <header className="fixed inset-x-0 top-3 z-50 px-3 sm:top-4 sm:px-4">
       <nav
-        className={`flex items-center justify-between gap-3 px-4 sm:px-6 py-3 rounded-full border transition-all duration-500 ${
-          scrolled
-            ? 'bg-charbon/60 backdrop-blur-xl border-or/20 shadow-[0_8px_32px_rgba(0,0,0,0.45)]'
-            : 'bg-transparent border-transparent'
+        className={`mx-auto flex max-w-4xl items-center justify-between gap-3 rounded-2xl border px-4 py-3 transition-all duration-500 sm:rounded-full sm:px-6 ${
+          scrolled || ouvert
+            ? 'border-or/20 bg-charbon/80 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-xl'
+            : 'border-transparent bg-transparent'
         }`}
       >
-        <a href="#top" className="lift font-display-italic text-or text-xl leading-none shrink-0">
-          RD
+        <a href="#top" className="lift flex items-center gap-2" aria-label="Accueil">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-or font-display-italic text-lg text-charbon">
+            R
+          </span>
+          <span className="hidden font-semibold tracking-tight text-creme sm:inline">
+            {CONTENU.nom}
+            <span className="text-or">.</span>
+          </span>
         </a>
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden items-center gap-6 lg:flex">
           {NAV_LINKS.map((l) => (
-            <a key={l.href} href={l.href} className="lift text-sm font-medium text-creme/80 hover:text-or transition-colors">
+            <a
+              key={l.href}
+              href={l.href}
+              className="lift text-sm font-medium text-creme/80 transition-colors hover:text-or"
+            >
               {l.label}
             </a>
           ))}
         </div>
-        <a
-          href="/cv-romiche.pdf"
-          download
-          className="magnetic-btn inline-flex items-center gap-2 rounded-full bg-or text-charbon font-semibold text-sm px-4 py-2 shadow-[0_8px_24px_rgba(212,168,67,0.25)]"
-        >
-          <FileDown size={15} strokeWidth={2.5} />
-          <span className="hidden xs:inline">Télécharger CV</span>
-          <span className="xs:hidden">CV</span>
-        </a>
+        <div className="flex items-center gap-2">
+          <a
+            href="#contact"
+            className="magnetic-btn hidden items-center gap-2 rounded-full bg-or px-4 py-2 text-sm font-semibold text-charbon sm:inline-flex"
+          >
+            Démarrer un projet <ArrowRight size={15} strokeWidth={2.5} />
+          </a>
+          <button
+            type="button"
+            onClick={() => setOuvert((o) => !o)}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-creme/15 text-creme lg:hidden"
+            aria-label="Menu"
+          >
+            {ouvert ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
       </nav>
+      {ouvert && (
+        <div className="mx-auto mt-2 max-w-4xl rounded-2xl border border-or/20 bg-charbon/95 p-3 backdrop-blur-xl lg:hidden">
+          {[...NAV_LINKS, { label: 'Démarrer un projet', href: '#contact' }].map((l) => (
+            <a
+              key={l.href + l.label}
+              href={l.href}
+              onClick={() => setOuvert(false)}
+              className="block rounded-xl px-4 py-3 text-sm font-medium text-creme/85 transition-colors hover:bg-creme/5 hover:text-or"
+            >
+              {l.label}
+            </a>
+          ))}
+        </div>
+      )}
     </header>
   );
 }
 
 function Hero() {
   return (
-    <section
-      id="top"
-      ref={(el) => el && ((window.__hero = el))}
-      className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden"
-    >
-      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop')" }} />
-      <div className="absolute inset-0 bg-gradient-to-t from-charbon via-charbon/70 to-charbon/30" />
-
-      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-24 pb-16">
-        <div
-          className="hero-photo w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-ardoise border-2 border-or flex items-center justify-center shadow-[0_16px_48px_rgba(212,168,67,0.18)]"
-        >
-          <span className="font-display-italic text-or text-4xl sm:text-5xl">RD</span>
-        </div>
-
-        <p className="hero-kicker mt-8 font-mono text-xs sm:text-sm tracking-[0.35em] text-or/90 uppercase">
-          Portfolio — Développeur web
-        </p>
-
-        <h1 className="hero-name mt-5 font-sans font-black text-creme text-tracking-tight2 text-[clamp(2.6rem,7.5vw,5.5rem)] leading-[0.95]">
-          GUIAGAIN DJOUGUELA
-        </h1>
-        <h2 className="hero-title font-display-italic text-or mt-4 text-[clamp(1.4rem,3.5vw,2.4rem)]">
-          Romiche — Développeur Web
-        </h2>
-
-        <div className="hero-stats mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-mono text-xs sm:text-sm text-creme/70">
-          <span>03 projets</span>
-          <span className="text-or">|</span>
-          <span>50% ERP en cours</span>
-          <span className="text-or">|</span>
-          <span>Douala — Cameroun</span>
-        </div>
-
-        <div className="hero-ctas mt-10 flex flex-col sm:flex-row items-center gap-4">
-          <a
-            href="/cv-romiche.pdf"
-            download
-            className="magnetic-btn inline-flex items-center gap-2 rounded-full bg-or text-charbon font-semibold px-8 py-4 text-base shadow-[0_16px_40px_rgba(212,168,67,0.3)]"
-          >
-            <Download size={18} strokeWidth={2.5} />
-            Télécharger CV
-          </a>
-          <a
-            href="#contact"
-            className="magnetic-btn inline-flex items-center gap-2 rounded-full border border-creme/30 text-creme font-semibold px-8 py-4 text-base hover:border-or hover:text-or transition-colors"
-          >
-            Me contacter
-          </a>
-        </div>
-
-        <a href="#a-propos" className="hero-scroll lift mt-16 text-creme/50 hover:text-or transition-colors" aria-label="Descendre">
-          <ArrowDown size={22} />
-        </a>
-      </div>
-    </section>
-  );
-}
-
-function About() {
-  return (
-    <section id="a-propos" className="bg-creme text-charbon py-28 px-6 rounded-t-[3rem] relative z-10 -mt-10">
-      <div className="max-w-6xl mx-auto grid md:grid-cols-[minmax(0,1fr)_2px_minmax(0,1.4fr)] gap-10 md:gap-14 items-start">
-        <h2 className="about-title font-display-italic text-5xl sm:text-6xl leading-none text-charbon">
-          À propos
-        </h2>
-        <div className="hidden md:block w-0.5 h-full bg-or/60" />
-        <div className="about-text space-y-5 text-[17px] sm:text-[19px] leading-relaxed text-charbon/85">
-          <p>
-            Développeur web avec des bases solides en <strong className="text-charbon">HTML/CSS/PHP</strong>,
-            complétées par la maîtrise de <strong className="text-charbon">Flutter</strong> et{' '}
-            <strong className="text-charbon">Java</strong>. Expérience pratique de création de sites — dont un
-            site e-commerce — et participation à une application de gestion des marchés.
+    <section id="top" className="relative overflow-hidden px-4 pb-16 pt-32 sm:px-6 sm:pt-40">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[720px] -translate-x-1/2 rounded-full bg-or/10 blur-[140px]"
+      />
+      <div className="relative mx-auto max-w-4xl text-center">
+        <Reveal>
+          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-or/25 bg-or/10 px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-or">
+            <Sparkles size={13} />
+            {CONTENU.titre} — {CONTENU.localisation}
           </p>
-          <p>
-            Je développe actuellement une <span className="font-display-italic text-or text-[1.1em]">ERP de gestion des PME</span>{' '}
-            (projet en cours à 50%), ce qui renforce ma polyvalence et mon autonomie.
+        </Reveal>
+        <Reveal delay={0.1}>
+          <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-creme sm:text-6xl">
+            Salut, moi c’est{' '}
+            <span className="font-display-italic text-or">{CONTENU.nom}.</span>
+            <br />
+            {CONTENU.baseline}
+          </h1>
+        </Reveal>
+        <Reveal delay={0.2}>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-creme/70 sm:text-lg">
+            {CONTENU.accroche}
           </p>
-          <p>
-            Bon relationnel, organisé et adaptable, je recherche un{' '}
-            <strong className="text-charbon">stage en développement web</strong> pour contribuer concrètement
-            à vos projets.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Experience() {
-  return (
-    <section id="experience" className="bg-charbon py-28 px-6">
-      <div className="max-w-5xl mx-auto">
-        <p className="text-center font-mono text-xs tracking-[0.35em] text-or/80 uppercase mb-3">Parcours</p>
-        <h2 className="text-center font-display-italic text-5xl sm:text-6xl text-creme mb-20">
-          L'expérience en mouvement
-        </h2>
-
-        <div className="relative">
-          <div className="absolute left-5 md:left-1/2 top-0 bottom-0 w-px bg-or/30 md:-translate-x-1/2" />
-
-          <div className="space-y-16 md:space-y-24">
-            {EXPERIENCES.map((exp, i) => {
-              const left = i % 2 === 0;
-              return (
-                <div key={exp.titre} className="relative md:grid md:grid-cols-2 md:gap-20 items-center">
-                  <div className={`experience-dot absolute left-5 md:left-1/2 top-2 md:top-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-or shadow-[0_0_20px_rgba(212,168,67,0.7)]`} />
-                  <article
-                    className={`experience-card ml-14 md:ml-0 bg-ardoise rounded-xl2 p-7 sm:p-9 border border-creme/5 ${
-                      left ? 'md:col-start-1' : 'md:col-start-2'
-                    }`}
-                  >
-                    <p className="font-mono text-xs tracking-widest text-or mb-3">{exp.periode}</p>
-                    <h3 className="font-sans font-bold text-xl sm:text-2xl text-creme">{exp.titre}</h3>
-                    <p className="text-creme/55 font-medium mt-1 text-sm">{exp.entreprise}</p>
-                    <p className="text-creme/75 mt-4 leading-relaxed text-[15px]">{exp.description}</p>
-                  </article>
-                </div>
-              );
-            })}
+        </Reveal>
+        <Reveal delay={0.3}>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <a
+              href="#contact"
+              className="magnetic-btn inline-flex w-full items-center justify-center gap-2 rounded-full bg-or px-7 py-3.5 font-semibold text-charbon sm:w-auto"
+            >
+              Démarrer un projet <ArrowRight size={17} strokeWidth={2.5} />
+            </a>
+            <a
+              href="#realisations"
+              className="magnetic-btn inline-flex w-full items-center justify-center gap-2 rounded-full border border-creme/20 px-7 py-3.5 font-semibold text-creme transition-colors hover:border-or/50 hover:text-or sm:w-auto"
+            >
+              Voir mes réalisations
+            </a>
           </div>
-        </div>
+        </Reveal>
+        {CONTENU.disponible && (
+          <Reveal delay={0.4}>
+            <p className="mt-6 inline-flex items-center gap-2 text-sm text-creme/60">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+              </span>
+              Disponible pour de nouvelles missions
+            </p>
+          </Reveal>
+        )}
       </div>
     </section>
   );
 }
 
-function SkillCircle({ nom, niveau, index }) {
-  const C = 2 * Math.PI * 42;
-  const target = C * (1 - niveau / 100);
+function Stats() {
   return (
-    <div
-      className={`skill-card bg-ardoise rounded-xl2 p-7 flex flex-col items-center border border-creme/5 shadow-[0_20px_40px_rgba(0,0,0,0.35)] ${
-        index === 4 ? 'md:col-span-2 lg:col-span-1' : ''
-      }`}
-    >
-      <div className="relative w-28 h-28">
-        <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-          <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(245,243,238,0.08)" strokeWidth="6" />
-          <circle
-            cx="50"
-            cy="50"
-            r="42"
-            fill="none"
-            stroke="#D4A843"
-            strokeWidth="6"
-            strokeLinecap="round"
-            strokeDasharray={C}
-            strokeDashoffset={C}
-            data-circle={niveau}
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="skill-counter font-mono text-xl font-semibold text-creme" data-target={niveau}>
-            0
-          </span>
-          <span className="font-mono text-sm text-or mt-1">%</span>
-        </div>
+    <section className="px-4 sm:px-6">
+      <div className="mx-auto grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-3">
+        {STATS.map((s, i) => (
+          <Reveal key={s.label} delay={i * 0.08}>
+            <div className="rounded-3xl border border-creme/10 bg-ardoise/60 px-6 py-8 text-center">
+              <p className="font-display-italic text-5xl text-or">
+                <Compteur valeur={s.valeur} suffixe={s.suffixe} />
+              </p>
+              <p className="mt-2 text-sm font-medium uppercase tracking-wider text-creme/60">{s.label}</p>
+            </div>
+          </Reveal>
+        ))}
       </div>
-      <h3 className="mt-5 text-center font-semibold text-creme text-[15px] leading-snug">{nom}</h3>
-    </div>
+    </section>
   );
 }
 
-function Skills() {
+function Services() {
   return (
-    <section id="competences" className="bg-ardoise py-28 px-6">
-      <div className="max-w-5xl mx-auto">
-        <p className="text-center font-mono text-xs tracking-[0.35em] text-or/80 uppercase mb-3">Compétences</p>
-        <h2 className="text-center font-display-italic text-5xl sm:text-6xl text-creme mb-4">
-          Le tableau de bord
-        </h2>
-        <p className="text-center text-creme/55 max-w-xl mx-auto mb-16 text-[15px]">
-          Une maîtrise mesurée, affichée sans fioritures — comme une interface de contrôle.
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SKILLS.map((s, i) => (
-            <SkillCircle key={s.nom} nom={s.nom} niveau={s.niveau} index={i} />
+    <section id="services" className="scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28">
+      <div className="mx-auto max-w-6xl">
+        <SectionTitre
+          eyebrow="Services"
+          titre="Ce que je fais pour toi"
+          description="Des sites et applications modernes, rapides et pensés pour tes objectifs — pas juste pour faire joli."
+        />
+        <div className="grid gap-5 md:grid-cols-2">
+          {SERVICES.map((s, i) => (
+            <Reveal key={s.titre} delay={(i % 2) * 0.08}>
+              <article className="experience-card h-full rounded-3xl border border-creme/10 bg-ardoise/60 p-7 sm:p-8">
+                <span className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-or/15 text-or">
+                  <s.icone size={22} />
+                </span>
+                <h3 className="text-xl font-bold text-creme">{s.titre}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-creme/70">{s.description}</p>
+                <ul className="mt-5 space-y-2.5">
+                  {s.points.map((p) => (
+                    <li key={p} className="flex items-start gap-2.5 text-sm text-creme/80">
+                      <Check size={16} className="mt-0.5 shrink-0 text-or" strokeWidth={3} />
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -271,31 +540,251 @@ function Skills() {
   );
 }
 
-function Formation() {
+function Realisations() {
   return (
-    <section id="formation" className="bg-charbon py-28 px-6">
-      <div className="max-w-4xl mx-auto">
-        <p className="text-center font-mono text-xs tracking-[0.35em] text-or/80 uppercase mb-3">Formation</p>
-        <h2 className="text-center font-display-italic text-5xl sm:text-6xl text-creme mb-16">Les fondations</h2>
+    <section id="realisations" className="scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28">
+      <div className="mx-auto max-w-6xl">
+        <SectionTitre
+          eyebrow="Réalisations"
+          titre="Mes derniers projets"
+          description="Une sélection de projets qui montrent ma façon de travailler : du besoin réel à la solution en ligne."
+        />
+        <div className="grid gap-5 md:grid-cols-2">
+          {REALISATIONS.map((r, i) => (
+            <Reveal key={r.titre} delay={(i % 2) * 0.08}>
+              <article className="experience-card flex h-full flex-col rounded-3xl border border-creme/10 bg-ardoise/60 p-7 sm:p-8">
+                <div className="flex flex-wrap gap-2">
+                  {r.tags.map((t) => (
+                    <span
+                      key={t}
+                      className="rounded-full border border-or/25 bg-or/10 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-or"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                <h3 className="mt-4 text-xl font-bold leading-snug text-creme">{r.titre}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-creme/70">{r.description}</p>
+                <p className="mt-4 flex items-center gap-2 text-xs uppercase tracking-wider text-creme/50">
+                  <Briefcase size={13} /> Client : {r.client}
+                </p>
+                <a
+                  href={r.lien}
+                  {...(r.externe ? { target: '_blank', rel: 'noreferrer' } : {})}
+                  className="lift mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-or"
+                >
+                  {r.lienLabel} <ArrowUpRight size={16} strokeWidth={2.5} />
+                </a>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
-        <div className="space-y-6">
-          <div className="edu-card bg-ardoise rounded-xl2 p-8 border border-creme/5 flex flex-col sm:flex-row sm:items-center gap-4">
-            <p className="font-mono text-xs tracking-widest text-or shrink-0">FORMATION TECHNIQUE</p>
-            <div className="sm:ml-6">
-              <h3 className="font-bold text-lg text-creme">Technicien en Électricité Bâtiment</h3>
-              <p className="text-creme/60 mt-1 text-sm">
-                Développement de compétences relationnelles et organisationnelles.
-              </p>
-            </div>
-          </div>
+function BandeauCta({ eyebrow, titre, bouton, href }) {
+  return (
+    <section className="px-4 sm:px-6">
+      <Reveal>
+        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-or/20 bg-gradient-to-br from-or/15 via-ardoise to-ardoise px-6 py-14 text-center sm:px-12 sm:py-20">
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-or">{eyebrow}</p>
+          <h2 className="mx-auto mt-3 max-w-2xl font-display-italic text-3xl leading-tight text-creme sm:text-5xl">
+            {titre}
+          </h2>
+          <a
+            href={href}
+            className="magnetic-btn mt-8 inline-flex items-center gap-2 rounded-full bg-or px-7 py-3.5 font-semibold text-charbon"
+          >
+            {bouton} <ArrowRight size={17} strokeWidth={2.5} />
+          </a>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
 
-          <div className="edu-card bg-ardoise rounded-xl2 p-8 border border-creme/5 flex flex-col sm:flex-row sm:items-center gap-4">
-            <p className="font-mono text-xs tracking-widest text-or shrink-0">LANGUES</p>
-            <div className="sm:ml-6">
-              <h3 className="font-bold text-lg text-creme">Français — Courant</h3>
-              <p className="text-creme/60 mt-1 text-sm">Lu, parlé, écrit. &nbsp;·&nbsp; Anglais — Moyen (lu, écrit).</p>
-            </div>
-          </div>
+function Parcours() {
+  return (
+    <section id="parcours" className="scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28">
+      <div className="mx-auto max-w-3xl">
+        <SectionTitre
+          eyebrow="Parcours"
+          titre="Mon expérience"
+          description="Un parcours construit par la pratique : des projets personnels aux missions pour des institutions."
+        />
+        <div className="relative space-y-5 before:absolute before:bottom-2 before:left-[7px] before:top-2 before:w-px before:bg-or/25">
+          {PARCOURS.map((p, i) => (
+            <Reveal key={p.titre} delay={i * 0.05}>
+              <article className="experience-card relative ml-8 rounded-3xl border border-creme/10 bg-ardoise/60 p-6 sm:p-7">
+                <span
+                  aria-hidden
+                  className="absolute -left-8 top-7 h-[15px] w-[15px] -translate-x-[0.5px] rounded-full border-2 border-or bg-charbon"
+                />
+                <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-or">
+                  <Clock size={12} /> {p.periode}
+                </p>
+                <h3 className="mt-2 text-lg font-bold text-creme">{p.titre}</h3>
+                <p className="text-sm font-medium text-creme/60">{p.entreprise}</p>
+                <p className="mt-2 text-sm leading-relaxed text-creme/70">{p.description}</p>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Processus() {
+  return (
+    <section id="processus" className="scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28">
+      <div className="mx-auto max-w-6xl">
+        <SectionTitre
+          eyebrow="Méthode"
+          titre="Un processus simple et éprouvé"
+          description="Tu sais toujours où en est ton projet. Pas de jargon, pas de surprise."
+        />
+        <div className="grid gap-5 md:grid-cols-3">
+          {PROCESSUS.map((p, i) => (
+            <Reveal key={p.etape} delay={i * 0.08}>
+              <article className="h-full rounded-3xl border border-creme/10 bg-ardoise/60 p-7 text-center sm:p-8">
+                <p className="font-display-italic text-5xl text-or/80">{p.etape}</p>
+                <h3 className="mt-3 text-lg font-bold text-creme">{p.titre}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-creme/70">{p.description}</p>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Tarifs() {
+  return (
+    <section id="tarifs" className="scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28">
+      <div className="mx-auto max-w-4xl">
+        <SectionTitre
+          eyebrow="Tarifs"
+          titre="Des formules claires"
+          description="Devis gratuit et détaillé avant chaque projet. Acompte de 50 % pour démarrer, solde à la livraison."
+        />
+        <div className="grid gap-5 md:grid-cols-2">
+          {TARIFS.map((t, i) => (
+            <Reveal key={t.nom} delay={i * 0.08}>
+              <article
+                className={`relative flex h-full flex-col rounded-3xl border p-7 sm:p-8 ${
+                  t.vedette
+                    ? 'border-or/50 bg-gradient-to-b from-or/15 to-ardoise shadow-[0_24px_64px_-24px_rgba(212,168,67,0.35)]'
+                    : 'border-creme/10 bg-ardoise/60'
+                }`}
+              >
+                {t.vedette && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-or px-4 py-1 text-xs font-bold uppercase tracking-wider text-charbon">
+                    Le plus demandé
+                  </span>
+                )}
+                <h3 className="text-lg font-bold text-creme">{t.nom}</h3>
+                <p className="mt-4">
+                  <span className="block text-xs uppercase tracking-wider text-creme/50">{t.base}</span>
+                  <span className="font-display-italic text-5xl text-or">{t.prix}</span>{' '}
+                  <span className="font-semibold text-creme/70">{t.unite}</span>
+                </p>
+                <p className="mt-3 text-sm text-creme/70">{t.description}</p>
+                <ul className="mt-5 flex-1 space-y-2.5">
+                  {t.points.map((p) => (
+                    <li key={p} className="flex items-start gap-2.5 text-sm text-creme/80">
+                      <Check size={16} className="mt-0.5 shrink-0 text-or" strokeWidth={3} />
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="#contact"
+                  className={`magnetic-btn mt-7 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold ${
+                    t.vedette ? 'bg-or text-charbon' : 'border border-creme/20 text-creme hover:border-or/50 hover:text-or'
+                  }`}
+                >
+                  Demander un devis <ArrowRight size={16} strokeWidth={2.5} />
+                </a>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Faq() {
+  const [ouvert, setOuvert] = useState(0);
+  return (
+    <section id="faq" className="scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28">
+      <div className="mx-auto max-w-3xl">
+        <SectionTitre eyebrow="FAQ" titre="Questions fréquentes" />
+        <div className="space-y-3">
+          {FAQ.map((f, i) => {
+            const estOuvert = ouvert === i;
+            return (
+              <Reveal key={f.question} delay={i * 0.04}>
+                <div
+                  className={`overflow-hidden rounded-2xl border transition-colors ${
+                    estOuvert ? 'border-or/40 bg-ardoise' : 'border-creme/10 bg-ardoise/60'
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOuvert(estOuvert ? -1 : i)}
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left sm:px-6"
+                    aria-expanded={estOuvert}
+                  >
+                    <span className="font-semibold text-creme">{f.question}</span>
+                    <ChevronDown
+                      size={18}
+                      className={`shrink-0 text-or transition-transform duration-300 ${estOuvert ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                  {estOuvert && (
+                    <p className="px-5 pb-5 text-sm leading-relaxed text-creme/70 sm:px-6">{f.reponse}</p>
+                  )}
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Temoignages() {
+  return (
+    <section id="avis" className="scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28">
+      <div className="mx-auto max-w-6xl">
+        <SectionTitre
+          eyebrow="Avis clients"
+          titre="Ils me font confiance"
+          description="La satisfaction client est ma meilleure publicité."
+        />
+        <div className="grid gap-5 md:grid-cols-2">
+          {TEMOIGNAGES.map((t, i) => (
+            <Reveal key={t.auteur + i} delay={i * 0.08}>
+              <figure className="flex h-full flex-col rounded-3xl border border-creme/10 bg-ardoise/60 p-7 sm:p-8">
+                <div aria-hidden className="font-display-italic text-6xl leading-none text-or/40">
+                  “
+                </div>
+                <blockquote className="-mt-4 flex-1 text-sm leading-relaxed text-creme/80 sm:text-base">
+                  {t.texte}
+                </blockquote>
+                <figcaption className="mt-6 border-t border-creme/10 pt-4">
+                  <p className="font-semibold text-creme">{t.auteur}</p>
+                  <p className="text-sm text-creme/50">{t.role}</p>
+                </figcaption>
+              </figure>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
@@ -303,233 +792,122 @@ function Formation() {
 }
 
 function Contact() {
+  const cartes = [
+    {
+      icone: Mail,
+      label: 'Email',
+      valeur: CONTENU.email,
+      href: `mailto:${CONTENU.email}`
+    },
+    {
+      icone: MessageCircle,
+      label: 'WhatsApp',
+      valeur: CONTENU.telephone,
+      href: CONTENU.whatsapp
+    },
+    {
+      icone: Phone,
+      label: 'Téléphone',
+      valeur: CONTENU.telephone,
+      href: CONTENU.telephoneLien
+    },
+    {
+      icone: MapPin,
+      label: 'Localisation',
+      valeur: CONTENU.localisation,
+      href: '#contact'
+    }
+  ];
   return (
-    <section id="contact" className="relative bg-charbon py-32 px-6 overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-15"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1800&auto=format&fit=crop')" }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-charbon via-charbon/85 to-charbon" />
-
-      <div className="relative z-10 max-w-4xl mx-auto text-center">
-        <h2 className="contact-title font-display-italic text-[clamp(2.4rem,6vw,4.5rem)] text-creme leading-tight">
-          Travaillons <span className="text-or">ensemble</span>
-        </h2>
-        <p className="mt-6 text-creme/70 max-w-xl mx-auto text-[15px] sm:text-base">
-          À la recherche d'un stage en développement web — prêt à contribuer concrètement à vos projets dès demain.
-        </p>
-
-        <div className="contact-links mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-          {CONTACTS.map((c) => (
-            <a
-              key={c.label}
-              href={c.href}
-              className="lift group inline-flex items-center gap-3 rounded-full bg-ardoise/80 backdrop-blur px-6 py-4 border border-creme/10 hover:border-or/50 transition-colors"
-            >
-              <c.icone size={18} className="text-or shrink-0" />
-              <span className="text-left">
-                <span className="block text-[11px] uppercase tracking-widest text-creme/50">{c.label}</span>
-                <span className="block text-sm font-medium text-creme group-hover:text-or transition-colors">
-                  {c.valeur}
+    <section id="contact" className="scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28">
+      <div className="mx-auto max-w-4xl">
+        <SectionTitre
+          eyebrow="Contact"
+          titre="Une idée ? Écris-moi."
+          description="Réponse en moins de 24 h. Devis gratuit, sans engagement."
+        />
+        <div className="grid gap-4 sm:grid-cols-2">
+          {cartes.map((c, i) => (
+            <Reveal key={c.label} delay={i * 0.06}>
+              <a
+                href={c.href}
+                {...(c.href.startsWith('http') ? { target: '_blank', rel: 'noreferrer' } : {})}
+                className="experience-card flex items-center gap-4 rounded-2xl border border-creme/10 bg-ardoise/60 p-5"
+              >
+                <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-or/15 text-or">
+                  <c.icone size={20} />
                 </span>
-              </span>
-            </a>
+                <span>
+                  <span className="block text-xs uppercase tracking-wider text-creme/50">{c.label}</span>
+                  <span className="block font-semibold text-creme">{c.valeur}</span>
+                </span>
+              </a>
+            </Reveal>
           ))}
         </div>
-
-        <a
-          href="/cv-romiche.pdf"
-          download
-          className="contact-cta magnetic-btn mt-12 inline-flex items-center gap-3 rounded-full bg-or text-charbon font-bold px-10 py-5 text-lg shadow-[0_20px_50px_rgba(212,168,67,0.35)]"
-        >
-          <Download size={20} strokeWidth={2.5} />
-          Télécharger mon CV
-        </a>
       </div>
     </section>
   );
 }
 
-function Footer() {
+function Pied() {
   return (
-    <footer className="bg-charbon rounded-t-[4rem] px-6 pt-16 pb-10 border-t border-creme/5">
-      <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
-        <p className="text-center sm:text-left">
-          <span className="font-semibold text-creme">Romiche GUIAGAIN DJOUGUELA</span>
-          <span className="block text-creme/50 text-sm mt-1 font-mono">Fait avec le vibe coding — 2026</span>
+    <footer className="overflow-hidden border-t border-creme/10">
+      <div aria-hidden className="whitespace-nowrap py-6">
+        <p className="animate-[defile_22s_linear_infinite] font-display-italic text-3xl text-creme/15 sm:text-4xl">
+          {Array.from({ length: 6 })
+            .map(() => 'Construisons ensemble — ')
+            .join('')}
         </p>
-        <p className="inline-flex items-center gap-2 font-mono text-xs text-creme/70">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
-          </span>
-          En ligne
+      </div>
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 pb-10 sm:flex-row sm:px-6">
+        <p className="text-sm text-creme/50">
+          © {new Date().getFullYear()} {CONTENU.nomComplet} — {CONTENU.localisation}
         </p>
+        <a
+          href="#top"
+          className="lift inline-flex items-center gap-2 rounded-full border border-creme/15 px-4 py-2 text-sm text-creme/70 hover:border-or/50 hover:text-or"
+        >
+          Haut de page <ArrowUp size={15} />
+        </a>
       </div>
     </footer>
   );
 }
 
 export default function App() {
-  const [scrolled, setScrolled] = useState(false);
-  const rootRef = useRef(null);
-
   useEffect(() => {
-    const hero = document.getElementById('top');
-    const observer = new IntersectionObserver(
-      ([entry]) => setScrolled(!entry.isIntersecting),
-      { threshold: 0.2 }
-    );
-    if (hero) observer.observe(hero);
-
-    const ctx = gsap.context(() => {
-      const ease = 'power3.out';
-
-      gsap.fromTo(
-        '.hero-photo, .hero-kicker, .hero-name, .hero-title, .hero-stats, .hero-ctas, .hero-scroll',
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, stagger: 0.12, ease }
-      );
-
-      gsap.fromTo(
-        '.about-title, .about-text',
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          stagger: 0.15,
-          ease,
-          scrollTrigger: { trigger: '#a-propos', start: 'top 75%' }
-        }
-      );
-
-      gsap.utils.toArray('.experience-card').forEach((card, i) => {
-        const fromLeft = i % 2 === 0;
-        gsap.fromTo(
-          card,
-          { x: fromLeft ? -80 : 80, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 1,
-            ease,
-            scrollTrigger: { trigger: card, start: 'top 80%' }
-          }
-        );
-      });
-
-      gsap.utils.toArray('.experience-dot').forEach((dot) => {
-        gsap.fromTo(
-          dot,
-          { scale: 0 },
-          {
-            scale: 1,
-            duration: 0.6,
-            ease: 'elastic.out(1, 0.6)',
-            scrollTrigger: { trigger: dot, start: 'top 85%' }
-          }
-        );
-      });
-
-      gsap.utils.toArray('.skill-card').forEach((card) => {
-        gsap.fromTo(
-          card,
-          { y: 40, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.9,
-            stagger: 0.15,
-            ease,
-            scrollTrigger: { trigger: card, start: 'top 85%' }
-          }
-        );
-      });
-
-      gsap.utils.toArray('.skill-counter').forEach((el) => {
-        const target = Number(el.dataset.target);
-        const proxy = { val: 0 };
-        gsap.to(proxy, {
-          val: target,
-          duration: 1.6,
-          ease: 'power2.out',
-          onUpdate: () => {
-            el.textContent = Math.round(proxy.val);
-          },
-          scrollTrigger: { trigger: el, start: 'top 85%' }
-        });
-      });
-
-      gsap.utils.toArray('[data-circle]').forEach((circle) => {
-        const C = 2 * Math.PI * 42;
-        const target = C * (1 - Number(circle.dataset.circle) / 100);
-        gsap.to(circle, {
-          strokeDashoffset: target,
-          duration: 1.8,
-          ease: 'power2.inOut',
-          scrollTrigger: { trigger: circle, start: 'top 85%' }
-        });
-      });
-
-      gsap.fromTo(
-        '.edu-card',
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.9,
-          stagger: 0.15,
-          ease,
-          scrollTrigger: { trigger: '#formation', start: 'top 75%' }
-        }
-      );
-
-      gsap.fromTo(
-        '.contact-title',
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease,
-          scrollTrigger: { trigger: '#contact', start: 'top 70%' }
-        }
-      );
-
-      gsap.fromTo(
-        '.contact-links a, .contact-cta',
-        { y: 30, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.12,
-          ease,
-          scrollTrigger: { trigger: '#contact', start: 'top 60%' }
-        }
-      );
-    }, rootRef);
-
-    return () => {
-      observer.disconnect();
-      ctx.revert();
-    };
+    document.title = `${CONTENU.nomComplet} — ${CONTENU.titre}`;
   }, []);
-
   return (
-    <div ref={rootRef} className="min-h-screen bg-charbon text-creme">
-      <div className="noise-overlay" aria-hidden="true" />
-      <Navbar scrolled={scrolled} />
+    <div className="min-h-screen bg-charbon text-creme">
+      <div aria-hidden className="noise-overlay" />
+      <Navbar />
       <main>
         <Hero />
-        <About />
-        <Experience />
-        <Skills />
-        <Formation />
+        <Stats />
+        <Services />
+        <Realisations />
+        <BandeauCta
+          eyebrow="Collaboration"
+          titre="Prêt à construire ton prochain projet ?"
+          bouton="Réserver un appel gratuit"
+          href="#contact"
+        />
+        <Parcours />
+        <Processus />
+        <Tarifs />
+        <Faq />
+        <Temoignages />
+        <BandeauCta
+          eyebrow="Contact"
+          titre="Parlons de ton projet dès aujourd’hui."
+          bouton="Me contacter"
+          href="#contact"
+        />
         <Contact />
       </main>
-      <Footer />
+      <Pied />
     </div>
   );
 }

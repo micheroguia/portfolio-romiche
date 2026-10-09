@@ -78,6 +78,16 @@
   box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.6);
 }
 
+/* Bandeau défilant du pied de page */
+@keyframes defile {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
